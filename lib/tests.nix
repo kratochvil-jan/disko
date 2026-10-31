@@ -146,10 +146,11 @@ let
             documentation.enable = false;
             hardware.enableAllFirmware = lib.mkForce false;
             # FIXME: we don't have an systemd in stage-1 equialvent for this
-            boot.initrd.preDeviceCommands = lib.mkIf (!config.boot.initrd.systemd.enable) ''
-              echo -n 'secretsecret' > /tmp/secret.key
-            '';
-            boot.initrd.secrets = lib.mkIf config.boot.initrd.systemd.enable {
+            # boot.initrd.systemd.enable is removed (always true) in 26.11
+            # boot.initrd.preDeviceCommands = lib.mkIf (!config.boot.initrd.systemd.enable) ''
+            #   echo -n 'secretsecret' > /tmp/secret.key
+            # '';
+            boot.initrd.secrets = {
               "/tmp/secret.key" = pkgs.writeText "secret.key" "secretsecret";
             };
             boot.consoleLogLevel = lib.mkForce 100;
